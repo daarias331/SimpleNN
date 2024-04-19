@@ -1,1 +1,2 @@
-/data
+# Ignore data folder and its subfolders
+data/
