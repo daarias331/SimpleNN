@@ -39,20 +39,21 @@ class MyNN(nn.Module):
 # Set device cuda for GPU if it's available otherwise run on the CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+print(f'Device being used: {device}')
 
 #Load data
-full_dataset=datasets.MNIST(root='data/', train=True,download=True)
+full_dataset=datasets.MNIST(root='data/', train=True,download=True, transform=transforms.ToTensor())
 
 #Split the dataset into training and validation
 train_ds, val_ds = torch.utils.data.random_split(full_dataset, [50000, 10000])
 
 #Download test dataset
-test_ds=datasets.MNIST(root='data/', train=False, download=True)
+test_ds=datasets.MNIST(root='data/', train=False, download=True, transform=transforms.ToTensor())
 
 #Create data loaders
-train_loader=DataLoader(dataset=train_ds, batch_size=batch_size, shuffle=True, transforms=transforms.ToTensor())
-val_loader=DataLoader(dataset=val_ds,batch_size=batch_size, shuffle=True, transforms=transforms.ToTensor()) 
-test_dataloader=DataLoader(dataet=test_ds, batch_size=batch_size, shuffle=False, transformers=transforms.ToTensor())
+train_loader=DataLoader(dataset=train_ds, batch_size=batch_size, shuffle=True)
+val_loader=DataLoader(dataset=val_ds,batch_size=batch_size, shuffle=True) 
+test_loader=DataLoader(dataset=test_ds, batch_size=batch_size, shuffle=False)
 
 
 # Initialize network and send it to device
@@ -85,6 +86,9 @@ def train_loop(num_epochs,  model, train_loader, criterion, optimizer):
 
             # gradient descent or adam step
             optimizer.step()
+
+# Perform the training
+train_loop(num_epochs, model, train_loader, criterion, optimizer)
 
 
 def check_accuracy(loader, model):
